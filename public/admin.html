@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛡️ সুপার অ্যাডমিন কন্ট্রোল প্যানেল | Netzwerk A2 Exam</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-page">
+  <!-- Admin Header -->
+  <header class="app-header admin-navbar">
+    <div class="header-container">
+      <div class="brand">
+        <span class="flag-icon">🛡️</span>
+        <div>
+          <h1>সুপার অ্যাডমিন ড্যাশবোর্ড (Teacher Portal)</h1>
+          <p class="subtitle">সিট কন্ট্রোল, লাইভ মনিটরিং, মার্কশিট ও লিডারবোর্ড সিস্টেম</p>
+        </div>
+      </div>
+      <div class="nav-links">
+        <button class="nav-btn admin-btn active" onclick="showLeaderboardModal()">🏆 লিডারবোর্ড দেখুন</button>
+        <a href="/" target="_blank" class="nav-btn">🌐 এক্সাম হল ভিউ (Exam Hall)</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- Top Action Bar -->
+    <div class="admin-header">
+      <div>
+        <h2>📊 রিয়েল-টাইম সিট ম্যানেজমেন্ট ও শিক্ষার্থী মার্কশিট</h2>
+        <p>সিট বা সিটের ইউজার ডিলিট করুন, শিক্ষার্থীদের টিক/ক্রস মার্কশিট দেখুন ও এক ক্লিকে কপি করুন।</p>
+      </div>
+      <div class="admin-actions">
+        <button class="btn btn-outline" onclick="addNewSeat()">➕ নতুন সিট যোগ করুন</button>
+        <button class="btn btn-primary" onclick="showLeaderboardModal()">🏆 লিডারবোর্ড জেনারেটর</button>
+        <button class="btn btn-refresh" onclick="loadAdminData()">🔄 রিফ্রেশ</button>
+        <button class="btn btn-danger" onclick="resetAllData()">⚠️ সম্পূর্ণ রিসেট</button>
+      </div>
+    </div>
+
+    <!-- 1. Interactive Seat Management Cards -->
+    <div class="admin-seats-summary">
+      <div class="section-title-row">
+        <h3>🪑 সিট নিয়ন্ত্রণ ও লাইভ স্ট্যাটাস (Seat Control Center)</h3>
+        <span id="seatSummaryBadge" class="badge-score">১০টি সিট</span>
+      </div>
+      <p class="section-subtitle">প্রতিটি সিটের জন্য পৃথক অপশন: সিট খালি করা (ইউজার ডিলিট) বা স্থায়ীভাবে সিট মুছে ফেলা।</p>
+      
+      <div id="adminSeatsCardsGrid" class="admin-seats-grid">
+        <!-- Interactive Seat Management Cards loaded dynamically -->
+      </div>
+    </div>
+
+    <!-- 2. Submissions & Marksheet Table -->
+    <div class="table-card">
+      <div class="table-card-header">
+        <div>
+          <h3>📋 শিক্ষার্থী ফলাফল ও মার্কশিট প্যানেল (Exam Marksheets & Scores)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">
+            প্রতিটি শিক্ষার্থীর পৃথক <strong>মার্কশিট দেখা</strong>, <strong>এক ক্লিকে রেজাল্ট কপি</strong> এবং ডিলিট সুবিধা।
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button class="btn btn-primary" style="padding: 0.45rem 0.9rem; font-size: 0.85rem;" onclick="copyLeaderboardText()">
+            📋 লিডারবোর্ড কপি করুন
+          </button>
+          <span id="submissionCountBadge" class="badge-score">০ জন পরীক্ষার্থী</span>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>জমার সময়</th>
+              <th>শিক্ষার্থীর নাম</th>
+              <th>সিট নম্বর</th>
+              <th>প্রাপ্ত নম্বর (১০০)</th>
+              <th>সঠিক (✅) / ভুল (❌)</th>
+              <th>শতাংশ</th>
+              <th style="text-align: center;">অ্যাকশন ও মার্কশিট</th>
+            </tr>
+          </thead>
+          <tbody id="submissionsTableBody">
+            <tr>
+              <td colspan="7" class="text-center">কোনো সাবমিশন পাওয়া যায়নি।</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MODAL 1: Marksheet Modal (Detailed Tik/Cross with Copy Button) -->
+    <div id="marksheetModal" class="modal">
+      <div class="modal-content marksheet-modal-box">
+        <div class="modal-header">
+          <div>
+            <h3 id="modalStudentTitle">শিক্ষার্থীর অফিশিয়াল মার্কশিট</h3>
+            <p id="modalStudentSubtitle" style="font-size: 0.85rem; color: var(--text-muted);"></p>
+          </div>
+          <span class="close-modal" onclick="closeMarksheetModal()">&times;</span>
+        </div>
+        <div class="marksheet-top-bar">
+          <div id="modalScoreBadges" class="score-badges-row"></div>
+          <button class="btn btn-primary" id="btnCopySingleMarksheet" onclick="copyCurrentMarksheet()">
+            📋 এই মার্কশিট কপি করুন (Copy Marksheet)
+          </button>
+        </div>
+        <div class="modal-body" id="modalStudentContent">
+          <!-- Tik / Cross detailed evaluation cards -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 2: Leaderboard Modal (Rank 1st, 2nd, 3rd with 1-Click Copy) -->
+    <div id="leaderboardModal" class="modal">
+      <div class="modal-content leaderboard-modal-box">
+        <div class="modal-header">
+          <div>
+            <h3>🏆 পরীক্ষার চূড়ান্ত লিডারবোর্ড (Rankings & Leaderboard)</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">সর্বোচ্চ স্কোরের ভিত্তিতে ১ম, ২য়, ৩য় এবং ক্রমানুসারে তালিকা</p>
+          </div>
+          <span class="close-modal" onclick="closeLeaderboardModal()">&times;</span>
+        </div>
+        <div class="leaderboard-actions-bar">
+          <button class="btn btn-submit" onclick="copyLeaderboardText()" style="padding: 0.55rem 1.25rem; font-size: 0.95rem;">
+            📋 পুরো লিডারবোর্ড কপি করুন (Copy Rankings)
+          </button>
+        </div>
+        <div class="modal-body" id="modalLeaderboardContent">
+          <!-- Leaderboard list rendered here -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Toast Notification for Copy -->
+  <div id="copyToast" class="copy-toast">কপি সফল হয়েছে! ✅</div>
+
+  <footer class="app-footer">
+    <p>Netzwerk A2 Examination System | শক্তিশালী শিক্ষক নিয়ন্ত্রণ প্যানেল</p>
+  </footer>
+
+  <script src="admin.js"></script>
+</body>
+</html>

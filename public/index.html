@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netzwerk A2 - জার্মান গ্রামার অনলাইন পরীক্ষা হল</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Student Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <span class="flag-icon">🇩🇪</span>
+        <div>
+          <h1>Netzwerk A2 Exam Portal</h1>
+          <p class="subtitle">জার্মান ব্যাকরণ পরীক্ষা (Kapitel 1 & 2 Examination)</p>
+        </div>
+      </div>
+      <div class="status-indicator">
+        <span class="live-pulse"></span> এক্সাম সার্ভার সক্রিয়
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    
+    <!-- VIEW 1: SEAT SELECTION & REGISTRATION -->
+    <section id="seatSelectionView" class="view-section active">
+      <div class="hero-card">
+        <div class="badge">১০টি সীমিত আসন (Limited 10 Seats)</div>
+        <h2>অনলাইন জার্মান এ২ গ্রামার এক্সাম হল</h2>
+        <p class="description">
+          নিচের ১০টি সিটের মধ্যে যেকোনো খালি সিট বেছে নিন। আপনার নাম লিখে "সিট বুক ও পরীক্ষা শুরু করুন" বাটনে ক্লিক করলে সিটটি আপনার নামে বরাদ্দ হয়ে যাবে এবং পরীক্ষার প্রশ্নপত্র চালু হবে।
+        </p>
+
+        <!-- Topic Badges -->
+        <div class="topics-covered">
+          <span class="topic-tag">📘 Nebensatz mit weil & denn</span>
+          <span class="topic-tag">📗 Perfekt mit haben/sein</span>
+          <span class="topic-tag">📙 Genitiv bei Namen (+s/Apostroph)</span>
+          <span class="topic-tag">📕 Modalverben im Präteritum</span>
+          <span class="topic-tag">📓 Possessivartikel im Dativ</span>
+        </div>
+      </div>
+
+      <!-- Seats Grid -->
+      <div class="seats-container">
+        <div class="seats-header">
+          <h3>🪑 আসন নির্বাচন (Seat Allocation)</h3>
+          <div class="legend">
+            <span class="legend-item"><span class="dot available"></span> খালি সিট</span>
+            <span class="legend-item"><span class="dot selected"></span> সিলেক্টেড সিট</span>
+            <span class="legend-item"><span class="dot occupied"></span> বুকড সিট</span>
+          </div>
+        </div>
+
+        <div id="seatsGrid" class="seats-grid">
+          <!-- Dynamically generated seats -->
+        </div>
+
+        <!-- Student Booking Action Bar -->
+        <div class="booking-card">
+          <div class="booking-info">
+            <label for="studentNameInput">আপনার পূর্ণ নাম লিখুন:</label>
+            <input type="text" id="studentNameInput" placeholder="উদাঃ আবির হোসেন / সোনিয়া আখতার" autocomplete="off" oninput="validateBookingForm()">
+          </div>
+          <div class="selected-seat-display">
+            নির্বাচিত আসন: <strong id="selectedSeatLabel">কোনো সিট সিলেক্ট করা হয়নি</strong>
+          </div>
+          <button id="btnStartExam" class="btn btn-primary" disabled onclick="bookSeatAndStart()">
+            🚀 সিট বুক ও পরীক্ষা শুরু করুন
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: EXAM QUESTIONS INTERFACE -->
+    <section id="examView" class="view-section">
+      <div class="exam-header-bar">
+        <div class="candidate-meta">
+          <div>শিক্ষার্থী: <strong id="activeCandidateName">---</strong></div>
+          <div>বরাদ্দকৃত আসন: <strong id="activeSeatName" class="highlight-seat">---</strong></div>
+        </div>
+        <div class="exam-meta">
+          <div>মোট প্রশ্ন: <strong>২৫টি (প্রতি টপিকে ৫টি)</strong></div>
+          <div>পূর্ণমান: <strong class="badge-score">১০০ নম্বর</strong></div>
+        </div>
+      </div>
+
+      <!-- Instructions Banner -->
+      <div class="info-alert">
+        📌 <strong>পরীক্ষার নিয়মাবলী:</strong> সব প্রশ্নের উত্তর মনোযোগ দিয়ে দিন। এখানে মাল্টিপল চয়েস এবং টাইপ করে উত্তর লেখার প্রশ্ন রয়েছে। সম্পন্ন হলে নিচে <strong>"পরীক্ষা জমা দিন (Submit Exam)"</strong> বাটনে ক্লিক করুন।
+      </div>
+
+      <!-- Questions List Form -->
+      <form id="examForm" onsubmit="event.preventDefault(); submitExamAnswers();">
+        <div id="questionsContainer" class="questions-list">
+          <!-- Questions rendered here -->
+        </div>
+
+        <div class="submit-action-area">
+          <button type="submit" class="btn btn-submit" id="btnSubmitExam">
+            ✅ পরীক্ষা জমা দিন (Submit Exam)
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- VIEW 3: EXAM RESULT VIEW -->
+    <section id="resultView" class="view-section">
+      <div class="result-card">
+        <div class="result-icon">🎉</div>
+        <h2>পরীক্ষার ফলাফল ও মূল্যায়ন রিপোর্ট</h2>
+        <p>আপনার উত্তরপত্র স্বয়ংক্রিয়ভাবে মূল্যায়িত হয়েছে এবং ফলাফল সংরক্ষিত হয়েছে।</p>
+
+        <div class="score-summary-grid">
+          <div class="metric-box">
+            <span class="metric-title">প্রাপ্ত নম্বর</span>
+            <span class="metric-val" id="resTotalScore">0</span>
+            <span class="metric-sub">১০০ এর মধ্যে</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-title">সঠিক উত্তর</span>
+            <span class="metric-val text-success" id="resCorrectCount">0</span>
+            <span class="metric-sub">টি প্রশ্ন</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-title">ভুল / অনুত্তরিত</span>
+            <span class="metric-val text-danger" id="resWrongCount">0</span>
+            <span class="metric-sub">টি প্রশ্ন</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-title">সাফল্যের হার</span>
+            <span class="metric-val text-primary" id="resPercentage">0%</span>
+            <span class="metric-sub">শতকরা</span>
+          </div>
+        </div>
+
+        <!-- Detailed Breakdown -->
+        <div class="detailed-review">
+          <h3>📝 প্রশ্নের সঠিক সমাধান ও ব্যাকরণগত ব্যাখ্যা (Answer Review)</h3>
+          <div id="resultDetailsList"></div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn btn-primary" onclick="location.reload()">⬅️ পরীক্ষার প্রধান পাতায় ফিরুন</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Netzwerk A2 Deutsch Grammatik Online Examination Portal | স্বয়ংক্রিয় পরীক্ষা ব্যবস্থা</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
