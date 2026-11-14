@@ -10,7 +10,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const DATA_FILE = path.join(__dirname, 'data.json');
+// In serverless environments (like Vercel), root directory is read-only.
+// We use /tmp for persistence or fallback gracefully.
+const DATA_FILE = process.env.VERCEL ? path.join('/tmp', 'data.json') : path.join(__dirname, 'data.json');
+
+// In-memory fallback if filesystem write fails in serverless
+let memoryState = getInitialData();
 
 // Initial state
 function getInitialData() {
@@ -32,23 +37,29 @@ function getInitialData() {
 
 // Load or create data
 function loadData() {
-  if (!fs.existsSync(DATA_FILE)) {
-    const init = getInitialData();
-    fs.writeFileSync(DATA_FILE, JSON.stringify(init, null, 2));
-    return init;
-  }
   try {
+    if (!fs.existsSync(DATA_FILE)) {
+      const init = getInitialData();
+      try { fs.writeFileSync(DATA_FILE, JSON.stringify(init, null, 2)); } catch(e) {}
+      memoryState = init;
+      return init;
+    }
     const content = fs.readFileSync(DATA_FILE, 'utf-8');
-    return JSON.parse(content);
+    const parsed = JSON.parse(content);
+    memoryState = parsed;
+    return parsed;
   } catch (e) {
-    const init = getInitialData();
-    fs.writeFileSync(DATA_FILE, JSON.stringify(init, null, 2));
-    return init;
+    return memoryState;
   }
 }
 
 function saveData(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  memoryState = data;
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  } catch (e) {
+    console.warn('Could not write to disk in serverless, kept in memory state:', e.message);
+  }
 }
 
 // Exam Questions Definition (5 topics x 5 questions = 25 questions, 4 marks each = 100 marks)
