@@ -118,7 +118,7 @@ async function fetchQuestionsAndStart() {
   }
 }
 
-// 3. Render Exam Questions
+// 3. Render Exam Questions (90 Questions in 3 Topics)
 function renderExamQuestions(questions) {
   const container = document.getElementById('questionsContainer');
   container.innerHTML = '';
@@ -132,7 +132,7 @@ function renderExamQuestions(questions) {
       topicHeader.className = 'topic-group-header';
       topicHeader.innerHTML = `
         <span>${currentTopic}</span>
-        <span class="count">৫টি প্রশ্ন (২০ নম্বর)</span>
+        <span class="count">৩০টি প্রশ্ন (৩০ নম্বর)</span>
       `;
       container.appendChild(topicHeader);
     }
@@ -247,4 +247,131 @@ function renderExamResult(result) {
     `;
     detailsContainer.appendChild(revEl);
   });
+}
+
+// 6. Public Leaderboard & Student Marksheets
+async function showPublicLeaderboardModal() {
+  const modal = document.getElementById('publicLeaderboardModal');
+  if (modal) modal.style.display = 'flex';
+  await loadPublicSubmissions();
+}
+
+function closePublicLeaderboardModal() {
+  const modal = document.getElementById('publicLeaderboardModal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function loadPublicSubmissions() {
+  const tbody = document.getElementById('publicSubmissionsTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="8" class="text-center">ফলাফল লোড হচ্ছে...</td></tr>';
+
+  try {
+    const res = await fetch('/api/submissions');
+    const data = await res.json();
+    const submissions = (data.submissions || []).sort((a, b) => b.totalScore - a.totalScore || new Date(a.submittedAt) - new Date(b.submittedAt));
+
+    if (submissions.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" class="text-center" style="color: #64748b; padding: 1.5rem;">এখনো কোনো শিক্ষার্থী পরীক্ষা জমা দেয়নি।</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = '';
+    submissions.forEach((sub, idx) => {
+      const tr = document.createElement('tr');
+      const timeStr = sub.submittedAt ? new Date(sub.submittedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-';
+      const rankBadge = idx === 0 ? '🥇 ১' : idx === 1 ? '🥈 ২' : idx === 2 ? '🥉 ৩' : `${idx + 1}`;
+      
+      tr.innerHTML = `
+        <td style="font-weight: 700; text-align: center;">${rankBadge}</td>
+        <td><strong>${sub.studentName}</strong></td>
+        <td><span class="seat-pill-sm">${sub.seatNumber}</span></td>
+        <td><strong>${sub.totalScore} / ${sub.maxScore}</strong></td>
+        <td><span style="color: #10b981; font-weight: 600;">✅ ${sub.correctCount}</span> / <span style="color: #ef4444; font-weight: 600;">❌ ${sub.wrongCount}</span></td>
+        <td><span class="badge-status" style="background: ${sub.percentage >= 60 ? '#ecfdf5; color: #065f46;' : '#fef2f2; color: #991b1b;'}">${sub.percentage}%</span></td>
+        <td style="font-size: 0.825rem; color: #64748b;">${timeStr}</td>
+        <td style="text-align: center;">
+          <button class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.825rem;" onclick="viewStudentPublicMarksheet(${sub.id})">
+            👁️ উত্তরপত্র দেখুন
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error('Error loading public submissions:', err);
+    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-danger">ডাটা লোড করতে সমস্যা হয়েছে।</td></tr>';
+  }
+}
+
+async function viewStudentPublicMarksheet(submissionId) {
+  try {
+    const res = await fetch(`/api/submissions/${submissionId}`);
+    if (!res.ok) {
+      alert('উত্তরপত্র লোড করতে সমস্যা হয়েছে।');
+      return;
+    }
+    const sub = await res.json();
+    
+    document.getElementById('publicModalStudentTitle').innerText = `${sub.studentName}-এর সম্পূর্ণ উত্তরপত্র`;
+    document.getElementById('publicModalStudentSubtitle').innerText = `${sub.seatNumber} • জমা দেওয়ার সময়: ${new Date(sub.submittedAt).toLocaleString()}`;
+
+    const scoreSummary = document.getElementById('publicMarksheetScoreSummary');
+    scoreSummary.innerHTML = `
+      <div class="score-summary-grid" style="margin-bottom: 1rem;">
+        <div class="metric-box">
+          <span class="metric-title">প্রাপ্ত নম্বর</span>
+          <span class="metric-val">${sub.totalScore}</span>
+          <span class="metric-sub">${sub.maxScore} এর মধ্যে</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-title">সঠিক উত্তর</span>
+          <span class="metric-val text-success">${sub.correctCount}</span>
+          <span class="metric-sub">টি প্রশ্ন</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-title">ভুল / অনুত্তরিত</span>
+          <span class="metric-val text-danger">${sub.wrongCount}</span>
+          <span class="metric-sub">টি প্রশ্ন</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-title">সাফল্যের হার</span>
+          <span class="metric-val text-primary">${sub.percentage}%</span>
+          <span class="metric-sub">শতকরা</span>
+        </div>
+      </div>
+    `;
+
+    const questionsList = document.getElementById('publicMarksheetQuestionsList');
+    questionsList.innerHTML = '';
+
+    sub.evaluationDetails.forEach((item, index) => {
+      const revEl = document.createElement('div');
+      revEl.className = `review-item ${item.isCorrect ? 'correct' : 'wrong'}`;
+      revEl.innerHTML = `
+        <div class="review-header">
+          <span>প্রশ্ন ${index + 1}: ${item.topic}</span>
+          <span class="${item.isCorrect ? 'text-success' : 'text-danger'}">
+            ${item.isCorrect ? `✅ সঠিক (+${item.pointsEarned} নম্বর)` : `❌ ভুল (${item.pointsEarned}/${item.maxPoints})`}
+          </span>
+        </div>
+        <div style="margin-bottom: 0.4rem;"><strong>প্রশ্ন:</strong> ${item.prompt}</div>
+        <div style="font-size: 0.95rem;"><strong>শিক্ষার্থীর উত্তর:</strong> <span style="font-weight: 600; color: ${item.isCorrect ? '#059669' : '#dc2626'}">${item.userAnswer}</span></div>
+        ${!item.isCorrect ? `<div style="font-size: 0.95rem; color: #166534;"><strong>সঠিক উত্তর:</strong> ${item.correctAnswer}</div>` : ''}
+        <div class="review-explanation"><strong>ব্যাকরণগত ব্যাখ্যা:</strong> ${item.explanation}</div>
+      `;
+      questionsList.appendChild(revEl);
+    });
+
+    const marksheetModal = document.getElementById('publicMarksheetModal');
+    if (marksheetModal) marksheetModal.style.display = 'flex';
+  } catch (err) {
+    console.error('Error fetching student submission details:', err);
+    alert('উত্তরপত্র লোড করা সম্ভব হয়নি।');
+  }
+}
+
+function closePublicMarksheetModal() {
+  const modal = document.getElementById('publicMarksheetModal');
+  if (modal) modal.style.display = 'none';
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Netzwerk A2 - জার্মান গ্রামার অনলাইন পরীক্ষা হল</title>
+  <title>Netzwerk A2 - জার্মান গ্রামার অনলাইন পরীক্ষা হল (Master Examination)</title>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -15,11 +15,16 @@
         <span class="flag-icon">🇩🇪</span>
         <div>
           <h1>Netzwerk A2 Exam Portal</h1>
-          <p class="subtitle">জার্মান ব্যাকরণ পরীক্ষা (Kapitel 1 & 2 Examination)</p>
+          <p class="subtitle">জার্মান ব্যাকরণ পরীক্ষা: Komparativ/Superlativ • Reflexive Verben • Adjektivendung</p>
         </div>
       </div>
-      <div class="status-indicator">
-        <span class="live-pulse"></span> এক্সাম সার্ভার সক্রিয়
+      <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+        <button class="btn btn-outline" style="color: #fff; border-color: rgba(255,255,255,0.3); font-size: 0.85rem; padding: 0.4rem 0.8rem;" onclick="showPublicLeaderboardModal()">
+          🏆 লাইভ রেজাল্ট ও সবার উত্তরপত্র
+        </button>
+        <div class="status-indicator">
+          <span class="live-pulse"></span> এক্সাম সার্ভার সক্রিয়
+        </div>
       </div>
     </div>
   </header>
@@ -30,18 +35,16 @@
     <section id="seatSelectionView" class="view-section active">
       <div class="hero-card">
         <div class="badge">১০টি সীমিত আসন (Limited 10 Seats)</div>
-        <h2>অনলাইন জার্মান এ২ গ্রামার এক্সাম হল</h2>
+        <h2>অনলাইন জার্মান এ২ গ্রামার মাস্টার এক্সাম হল</h2>
         <p class="description">
           নিচের ১০টি সিটের মধ্যে যেকোনো খালি সিট বেছে নিন। আপনার নাম লিখে "সিট বুক ও পরীক্ষা শুরু করুন" বাটনে ক্লিক করলে সিটটি আপনার নামে বরাদ্দ হয়ে যাবে এবং পরীক্ষার প্রশ্নপত্র চালু হবে।
         </p>
 
         <!-- Topic Badges -->
         <div class="topics-covered">
-          <span class="topic-tag">📘 Nebensatz mit weil & denn</span>
-          <span class="topic-tag">📗 Perfekt mit haben/sein</span>
-          <span class="topic-tag">📙 Genitiv bei Namen (+s/Apostroph)</span>
-          <span class="topic-tag">📕 Modalverben im Präteritum</span>
-          <span class="topic-tag">📓 Possessivartikel im Dativ</span>
+          <span class="topic-tag">📘 টপিক ১: Komparativ & Superlativ (als ও wie সহ - ৩০টি প্রশ্ন)</span>
+          <span class="topic-tag">📗 টপিক ২: Reflexive Verben (Akkusativ, Dativ ও Präpositionen - ৩০টি প্রশ্ন)</span>
+          <span class="topic-tag">📙 টপিক ৩: Adjektivendung nach bestimmtem Artikel (Nom, Akk, Dat - ৩০টি প্রশ্ন)</span>
         </div>
       </div>
 
@@ -84,14 +87,14 @@
           <div>বরাদ্দকৃত আসন: <strong id="activeSeatName" class="highlight-seat">---</strong></div>
         </div>
         <div class="exam-meta">
-          <div>মোট প্রশ্ন: <strong>২৫টি (প্রতি টপিকে ৫টি)</strong></div>
-          <div>পূর্ণমান: <strong class="badge-score">১০০ নম্বর</strong></div>
+          <div>মোট প্রশ্ন: <strong>৯০টি (প্রতি টপিকে ৩০টি)</strong></div>
+          <div>পূর্ণমান: <strong class="badge-score">৯০ নম্বর</strong></div>
         </div>
       </div>
 
       <!-- Instructions Banner -->
       <div class="info-alert">
-        📌 <strong>পরীক্ষার নিয়মাবলী:</strong> সব প্রশ্নের উত্তর মনোযোগ দিয়ে দিন। এখানে মাল্টিপল চয়েস এবং টাইপ করে উত্তর লেখার প্রশ্ন রয়েছে। সম্পন্ন হলে নিচে <strong>"পরীক্ষা জমা দিন (Submit Exam)"</strong> বাটনে ক্লিক করুন।
+        📌 <strong>পরীক্ষার নিয়মাবলী:</strong> সব প্রশ্নের উত্তর মনোযোগ দিয়ে দিন। এখানে মাল্টিপল চয়েস (MCQ) এবং সরাসরি টাইপ করে উত্তর দেওয়ার প্রশ্ন রয়েছে। কোনো প্রকার অনুমান বা তাড়াহুড়ো না করে ব্যাকরণ রুল মনে রেখে সমাধান করুন। পরীক্ষা সম্পন্ন হলে নিচে <strong>"পরীক্ষা জমা দিন (Submit Exam)"</strong> বাটনে ক্লিক করুন।
       </div>
 
       <!-- Questions List Form -->
@@ -113,13 +116,13 @@
       <div class="result-card">
         <div class="result-icon">🎉</div>
         <h2>পরীক্ষার ফলাফল ও মূল্যায়ন রিপোর্ট</h2>
-        <p>আপনার উত্তরপত্র স্বয়ংক্রিয়ভাবে মূল্যায়িত হয়েছে এবং ফলাফল সংরক্ষিত হয়েছে।</p>
+        <p>আপনার উত্তরপত্র স্বয়ংক্রিয়ভাবে মূল্যায়িত হয়েছে এবং ফলাফল সংরক্ষিত হয়েছে। ভুলগুলো নিচে বিস্তারিতভাবে দেখে নিন।</p>
 
         <div class="score-summary-grid">
           <div class="metric-box">
             <span class="metric-title">প্রাপ্ত নম্বর</span>
             <span class="metric-val" id="resTotalScore">0</span>
-            <span class="metric-sub">১০০ এর মধ্যে</span>
+            <span class="metric-sub">৯০ এর মধ্যে</span>
           </div>
           <div class="metric-box">
             <span class="metric-title">সঠিক উত্তর</span>
@@ -138,19 +141,90 @@
           </div>
         </div>
 
+        <!-- Result Action Bar -->
+        <div style="display: flex; gap: 0.75rem; justify-content: center; margin: 1.5rem 0; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="showPublicLeaderboardModal()">
+            👥 সকল শিক্ষার্থীর ফলাফল ও উত্তরপত্র দেখুন
+          </button>
+          <button class="btn btn-outline" onclick="location.reload()">
+            ⬅️ পরীক্ষার প্রধান পাতায় ফিরুন
+          </button>
+        </div>
+
         <!-- Detailed Breakdown -->
         <div class="detailed-review">
           <h3>📝 প্রশ্নের সঠিক সমাধান ও ব্যাকরণগত ব্যাখ্যা (Answer Review)</h3>
           <div id="resultDetailsList"></div>
         </div>
 
-        <div class="result-actions">
+        <div class="result-actions" style="margin-top: 2rem;">
           <button class="btn btn-primary" onclick="location.reload()">⬅️ পরীক্ষার প্রধান পাতায় ফিরুন</button>
         </div>
       </div>
     </section>
 
   </main>
+
+  <!-- MODAL: Public Leaderboard & All Submissions -->
+  <div id="publicLeaderboardModal" class="modal">
+    <div class="modal-content leaderboard-modal-box">
+      <div class="modal-header">
+        <div>
+          <h3>🏆 সকল পরীক্ষার্থীর লাইভ ফলাফল ও র‍্যাঙ্কিং</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">যেকোনো শিক্ষার্থীর উত্তরপত্র ও ভুল-সঠিক বিশ্লেষণ দেখতে "উত্তরপত্র দেখুন" এ ক্লিক করুন।</p>
+        </div>
+        <button class="modal-close-btn" onclick="closePublicLeaderboardModal()">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 1rem 1.25rem;">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">র‍্যাঙ্ক</th>
+                <th>শিক্ষার্থীর নাম</th>
+                <th>সিট</th>
+                <th>স্কোর (৯০)</th>
+                <th>সঠিক / ভুল</th>
+                <th>শতাংশ</th>
+                <th>জমার সময়</th>
+                <th style="text-align: center;">উত্তরপত্র</th>
+              </tr>
+            </thead>
+            <tbody id="publicSubmissionsTableBody">
+              <tr>
+                <td colspan="8" class="text-center">লোড হচ্ছে...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding: 0.8rem 1.25rem; display: flex; justify-content: flex-end;">
+        <button class="btn btn-outline" onclick="closePublicLeaderboardModal()">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Public Detailed Student Marksheet View -->
+  <div id="publicMarksheetModal" class="modal">
+    <div class="modal-content marksheet-modal-box" style="max-width: 900px; max-height: 90vh;">
+      <div class="modal-header">
+        <div>
+          <h3 id="publicModalStudentTitle">শিক্ষার্থীর সম্পূর্ণ উত্তরপত্র</h3>
+          <p id="publicModalStudentSubtitle" style="font-size: 0.85rem; color: var(--text-muted);"></p>
+        </div>
+        <button class="modal-close-btn" onclick="closePublicMarksheetModal()">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 1.25rem; overflow-y: auto; max-height: calc(90vh - 140px);">
+        <!-- Student score summary box -->
+        <div id="publicMarksheetScoreSummary" style="margin-bottom: 1.25rem;"></div>
+        <!-- Question-by-question breakdown -->
+        <div id="publicMarksheetQuestionsList" class="questions-list"></div>
+      </div>
+      <div class="modal-footer" style="padding: 0.8rem 1.25rem; display: flex; justify-content: flex-end;">
+        <button class="btn btn-primary" onclick="closePublicMarksheetModal()">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
 
   <footer class="app-footer">
     <p>Netzwerk A2 Deutsch Grammatik Online Examination Portal | স্বয়ংক্রিয় পরীক্ষা ব্যবস্থা</p>
